@@ -1,121 +1,64 @@
+// this file is the cards that render the recommendations for the user after we get a a response from the backend with Spotify and Google
 import React, { useState, useEffect } from 'react';
-import SelectYourVibe from "../components/createVibes"; // this imports the form for selecting your vibes
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
-import ChooseVibeImage from '../assets/ChooseVibe.png';
-import BookReccs from '../assets/BookReccs.png';
-import Header from '../components/Header';
+import { useParams } from 'react-router-dom';
 
-function ReccVibes() {
-    const [showForm, setShowForm] = useState(false); //change this to false when you actually have data running to it
-    const [playlists, setPlaylists] = useState([]);
+function ReccommendedVibes() {
 
-    // Fetch playlist data if we aren't showing the form
+const { music, books } = useParams();
+
     useEffect(() => {
-        if (!showForm) {
-            fetch('/api/music/categories/fantasy')
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    setPlaylists(data);
-                })
-                .catch(error => console.error('Error fetching playlists:', error));
-        }
-    }, [showForm]);
+        console.log("Books:", books);
+        console.log("Music:", music);
+    }, []);
 
-    const handleVibeSubmit = (vibes) => {
-        setShowForm(false);
-    };
-
-    return (
-        <>
-            <br />
-            {showForm ? (
-                <SelectYourVibe onSubmit={handleVibeSubmit} />
-            ) : (
-               
-                <Container>
-                     <Header /> 
-                <Row>
-                    <Col xs={12} style={{ padding: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center'  }}>
-                        <img
-                            src={ChooseVibeImage}
-                            alt="Choose Your Vibe"
-                            style={{ width: '50%', height: 'auto', borderRadius: '12px', marginBottom: '10px' }}
+    return(
+        <Container>
+            <h1>ReccVibes Container</h1>
+            {/* <Row>
+                <Col>
+                    <SelectYourVibe />
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    {books.map((book) => (
+                        <BookCard
+                            key={book.id}
+                            title={book.title}
+                            author={book.author}
+                            description={book.description}
+                            categories={book.categories}
+                            thumbnail={book.thumbnail}
                         />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs={12} md={6} lg={4} style={{ padding: '12px' }}>
-                        <iframe
-                            style={{ borderRadius: '12px' }}
-                            src="https://open.spotify.com/embed/playlist/5IzzaghT2XcSRP2tdLaJYe?utm_source=generator"
-                            width="100%"
-                            height="352"
-                            frameBorder="0"
-                            allowFullScreen
-                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                            loading="lazy"
-                        ></iframe>
-                    </Col>
-                    <Col xs={12} md={6} lg={4} style={{ padding: '10px' }}>
-                        <iframe
-                            style={{ borderRadius: '12px' }}
-                            src="https://open.spotify.com/embed/playlist/3rm4bpzAtzJz9i2DGZ9M0S?utm_source=generator"
-                            width="100%"
-                            height="352"
-                            frameBorder="0"
-                            allowFullScreen
-                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                            loading="lazy"
-                        ></iframe>
-                    </Col>
-                    <Col xs={12} md={6} lg={4} style={{ padding: '12px' }}>
-                    <iframe 
-                    style={{ borderRadius: '12px' }}
-                    src="https://open.spotify.com/embed/playlist/4luqfsi0N6TmWMm105ucFJ?utm_source=generator&theme=0" 
-                    width="100%" 
-                    height="352" 
-                    frameBorder="0" 
-                    allowfullscreen="" 
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                    loading="lazy"></iframe>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col id="books">
-                        {playlists.map((playlist, index) => (
-                            <Card key={index} style={{ width: '18rem', padding: '10px' }}>
-                                <Card.Img variant="top" src={playlist.thumbnail} />
-                                <Card.Body>
-                                    <Card.Title>{playlist.title}</Card.Title>
-                                    <Card.Subtitle className="mb-2 text-muted">{playlist.author}</Card.Subtitle>
-                                    <Card.Text>{playlist.description}</Card.Text>
-                                </Card.Body>
-                                <ListGroup className="list-group-flush">
-                                    <ListGroup.Item>{playlist.categories}</ListGroup.Item>
-                                </ListGroup>
-                            </Card>
-                        ))}
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs={12} style={{ padding: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center'  }}>
-                        <img
-                            src={BookReccs}
-                            alt="Choose Your Vibe"
-                            style={{ width: '100%', height: 'auto', borderRadius: '12px', marginBottom: '10px' }}
+                    ))}
+                </Col>
+                <Col>
+                    {playlists.map((playlist) => (
+                        <PlaylistCard
+                            key={playlist.id}
+                            title={playlist.title}
+                            description={playlist.description}
+                            categories={playlist.categories}
+                            external_url={playlist.external_url}
                         />
-                    </Col>
-                </Row>
-            </Container>
-        
-        )}
-    </>
-);
-};
+                    ))}
+                </Col>
+            </Row> */}
+        </Container>
+    );
 
-export default ReccVibes;
+}
+
+export default ReccommendedVibes;
+// first part of the page happens when a user selects vibes button in the nav bar
+// they will first see the createVibes form 
+// once they pick the vibes the calls will render cards
+// Book Cards: Book Title(hyperlink the preview link), Image, author, description, categories, is/not mature, save button or pass button
+// Playlist Cards: Playlist Title (hyperlink to external_url), image, description, categories, number of tracks, is/not mature, save button or pass button
+// NOTE. USERS ARE ONLY ABLE TO SELECT 1 BOOK AND 1 PLAYLIST TO SAVE.
+// consideration for character count limit in description of books and playlist. A read more button hyperlined to gooogle books
